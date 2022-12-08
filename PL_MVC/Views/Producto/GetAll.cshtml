@@ -1,0 +1,55 @@
+﻿@model ML.Producto
+@{
+    ViewBag.Title = "GetAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Lista de Productos</h2>
+<div class="container">
+    <p>Aqui puede ver, editar o agrgar a un Producto</p>
+    <p>Para agregar un Producto presione el boton verde</p>
+    <p>Para editar un Producto presione el boton amarillo</p>
+    <p>Para eliminar un Producto presione el boton rojo</p>
+
+    <div class="row">
+        <div style="float:right">
+            @Html.ActionLink("+", "Form", "Productos", htmlAttributes: new { @class = "btn btn-success" })
+        </div>
+    </div>
+
+    <hr />
+    <div class="row">
+        <table class="tablecenter  table-bordered ">
+
+            <thead>
+                <tr>
+                    <th>Editar</th>
+                    <th>Nombre</th>
+                    <th>precio Unitario</th>
+                    <th>Stock</th>
+                    <th>Proveedor </th>
+                    <th>Departamento</th>
+                    <th>Descripcio</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (ML.Producto producto in Model.Productos)
+                {
+                    <tr>
+                        <td class="text-center"><a class="btn btn-warning glyphicon glyphicon-edit" href="@Url.Action("Form", "Producto", new { IdProducto = producto.IdProducto })"></a></td>
+                        <td class="hidden">@producto.IdProducto</td>
+                        <td>@producto.Nombre </td>
+                        <td> @producto.PrecioUnitario</td>
+                        <td> @producto.Stock</td>
+                        <td> @producto.Proveedor.IdProveedor</td>
+                        <td> @producto.Departamento.IdDepartamento</td>
+                        <td> @producto.Descripcion</td>
+                        <td class="text-center"><a class="btn btn-danger glyphicon glyphicon-trash" href="@Url.Action("Delete", "Producto", new { IdProducto = producto.IdProducto })" onclick="return confirm('Estas seguro que deseas eliminar este producto?');"></a></td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

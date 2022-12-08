@@ -1,0 +1,132 @@
+﻿@model ML.Producto
+@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class=" container">
+    <h2>Form</h2>
+    <div class="row">
+        <div class="col-md-12">
+            @using (Html.BeginForm("Form", "Producto", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="form-horizontal">
+
+                    <div class="form-group">
+
+                        <div class="col-md-3">
+
+                            @Html.LabelFor(model => model.IdProducto, new { @class = "hidden" })
+
+                            @Html.TextBoxFor(model => model.IdProducto, new { @class = "hidden form-control" })
+
+                            @Html.ValidationMessageFor(model => model.IdProducto)
+
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.LabelFor(model => model.Nombre)
+                            @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", @id = "txtNombre" })
+                            @Html.ValidationMessageFor(model => model.Nombre)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.LabelFor(model => model.PrecioUnitario)
+                            @Html.TextBoxFor(model => model.PrecioUnitario, new { @class = "form-control", @id = "txtNombre" })
+                            @Html.ValidationMessageFor(model => model.PrecioUnitario)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.LabelFor(model => model.Stock)
+                            @Html.TextBoxFor(model => model.Stock, new { @class = "form-control", @id = "txtNombre" })
+                            @Html.ValidationMessageFor(model => model.Stock)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.LabelFor(model => model.Proveedor.IdProveedor)
+                            @* @Html.TextBoxFor(model => model.Rol.IdRol, new { @class = "form-control", @id = "txtNombre" })*@
+                            @Html.DropDownListFor(model => model.Proveedor.IdProveedor, new SelectList(Model.Proveedor.Proveedores, "IdProveedor", "Nombre"), "Selecciona una opción", new { id = "ddlporove", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Proveedor.IdProveedor)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.LabelFor(model => model.Departamento.Area.IdArea)
+                            
+                            @Html.DropDownListFor(model => model.Departamento.Area.IdArea, new SelectList(Model.Departamento.Area.Areas, "IdArea", "Nombre"), "Selecciona una opción", new { id = "ddIarea", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Departamento.Area.IdArea)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.LabelFor(model => model.Departamento.IdDepartamento)
+                            @if (Model.Departamento.Departamentos == null)
+                            {
+                                @Html.DropDownListFor(model => model.Departamento.IdDepartamento, new SelectList(string.Empty, "Value", "Text"), "Seleciona un departamento", htmlAttributes: new { id = "ddldepa", @class = "form-control" })
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(model => model.Departamento.IdDepartamento, new SelectList(Model.Departamento.Departamentos, "IdDepartamento", "Nombre"), "Selecciona un departamento", htmlAttributes: new { id = "ddldepa", @class = "form-control" })
+                            }
+                        </div>
+                    </div>           @* @Html.TextBoxFor(model => model.Rol.IdRol, new { @class = "form-control", @id = "txtNombre" })*@
+
+
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.LabelFor(model => model.Descripcion)
+                            @Html.TextBoxFor(model => model.Descripcion, new { @class = "form-control", @id = "txtNombre" })
+                            @Html.ValidationMessageFor(model => model.Descripcion)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <input type="submit" value="Guardar" class="btn btn-success" />
+                            @Html.ActionLink("Regresar", "GetAll", "Prducto", htmlAttributes: new { @class = "btn btn-success" })
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>
+
+
+@Scripts.Render("~/bundles/jquery")
+<script type="text/javascript">
+            $(document).ready(function () {
+
+                $("#ddIarea").change(function ()
+                {
+                    $("#ddldepa").empty();
+                    $.ajax
+                        ({
+                            type: 'POST',
+                            url: '@Url.Action("GetDepartamento")',
+                            dataType: 'json',
+                            data: { IdArea: $("#ddIarea").val() },
+                            success: function (departamentos)
+                            {
+                                $("#ddldepa").append('<option value="0">' + 'Seleccione una opción' + '</option>');
+                                $.each(departamentos, function (i, departamentos)
+                                {
+                                    $("#ddldepa").append('<option value="'
+                                        + departamentos.IdDepartamento + '">'
+                                        + departamentos.Nombre + '</option>');
+                                });
+                            },
+                            error: function (ex)
+                            {
+                                alert('Failed.' + ex);
+                            }
+                        });
+                     })
+                })
+</script>
+    }
