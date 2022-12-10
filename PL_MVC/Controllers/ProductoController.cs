@@ -14,11 +14,14 @@ namespace PL_MVC.Controllers
         {
             
             ML.Producto producto = new ML.Producto();
-            //ML.Result result = BL.Producto.GetallEF();
-             ServiceProducto.ProductoClient context = new ServiceProducto.ProductoClient();  
+            
+            //Se hace el acceso al servidor ServiceProducto
+             ServiceProducto.ProductoClient context = new ServiceProducto.ProductoClient();
+            //Es como hacer el ML.Result result = BL.Producto.GetallEF();
             var result = context.GetAll();
             if (result.Correct)
             {
+                //Agregamos Tolist()
                 producto.Productos = result.Objects.ToList();
             }
             else
